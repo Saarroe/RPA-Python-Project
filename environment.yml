@@ -8,4 +8,5 @@ dependencies:
   - pandas
   - openpyxl
   - pip:
-    - selenium
+    - selenium==4.32.0
+    - requests

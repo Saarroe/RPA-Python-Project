@@ -6,6 +6,8 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.chrome.options import Options
 import os
 import time
+import requests
+
 
 def download_csv_file():
     """
@@ -19,16 +21,28 @@ def download_csv_file():
     download_button = driver.find_element(By.XPATH, '//a[contains(text(),"Download Excel")]')
     download_url = download_button.get_attribute('href')
 
-    current_wd = os.getcwd()
-    print(f"Current Working Directory: {current_wd}")
-
-   
-    #if not os.path.exists(download_folder):
-
+    # Quit the session
     driver.quit()
 
+    current_wd = os.getcwd()
+    print(f"Current Working Directory: {current_wd}")
+    download_folder = os.path.join(current_wd, "downloads")
+    print(f"Download Folder: {download_folder}")
+    if not os.path.exists(download_folder):
+        os.makedirs(download_folder)
+    
+    # Define file path and name
+    file_path = os.path.join(download_folder, "rpa_challenge.xlsx")
 
+    # Download the file
+    response = requests.get(download_url)
+    response.raise_for_status()  # Raise error for bad status codes
 
+    with open(file_path, "wb") as f:
+        f.write(response.content)
+        
+    print(f"File downloaded successfully to: {file_path}")
+    return pd.read_excel(file_path)
 
 def main(download_csv=False):
     """
@@ -48,8 +62,8 @@ def main(download_csv=False):
             print(df.shape) # Shape of the DataFrame 10,7 so 10 rows:
     else: 
          # Download the CSV file if the flag is set
-        download_csv_file()
-    
+        df=download_csv_file()
+        df.columns = df.columns.str.strip()
 
     # Open web browser and navigate to the website
     driver = webdriver.Chrome()
