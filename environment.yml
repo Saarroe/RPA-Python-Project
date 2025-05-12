@@ -6,5 +6,6 @@ dependencies:
   - python=3.11
   - pip
   - pandas
+  - openpyxl
   - pip:
     - selenium
