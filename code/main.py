@@ -8,7 +8,6 @@ import os
 import time
 import requests
 
-
 def download_csv_file():
     """
     This function downloads the CSV file from the website.
@@ -24,10 +23,11 @@ def download_csv_file():
     # Quit the session
     driver.quit()
 
+    # Create a directory to save the downloaded file
     current_wd = os.getcwd()
-    print(f"Current Working Directory: {current_wd}")
+    #print(f"Current Working Directory: {current_wd}")
     download_folder = os.path.join(current_wd, "downloads")
-    print(f"Download Folder: {download_folder}")
+    #print(f"Download Folder: {download_folder}")
     if not os.path.exists(download_folder):
         os.makedirs(download_folder)
     
@@ -38,17 +38,19 @@ def download_csv_file():
     response = requests.get(download_url)
     response.raise_for_status()  # Raise error for bad status codes
 
+    # Save the file to the specified path
     with open(file_path, "wb") as f:
         f.write(response.content)
         
-    print(f"File downloaded successfully to: {file_path}")
+    #print(f"File downloaded successfully to: {file_path}")
     return pd.read_excel(file_path)
 
-def main(download_csv=False):
+def main(download_csv=True):
     """
     This script automates the process of filling out a web form using data from an Excel file.
+    download_csv: bool, if True, download the CSV file from the website.
     """
-
+    # If the flag is set to False, check if the file exists and load it
     if not download_csv:
         # Check if the file exists
         if not os.path.exists('challenge.xlsx'):
@@ -58,10 +60,10 @@ def main(download_csv=False):
             # Load the CSV file
             df = pd.read_excel('challenge.xlsx')
             df.columns = df.columns.str.strip()
-            print(df.head())
-            print(df.shape) # Shape of the DataFrame 10,7 so 10 rows:
+            #print(df.head())
+            #print(df.shape) # Shape of the DataFrame 10,7 so 10 rows:
     else: 
-         # Download the CSV file if the flag is set
+        # Download the CSV file if the flag is set
         df=download_csv_file()
         df.columns = df.columns.str.strip()
 
@@ -93,7 +95,6 @@ def main(download_csv=False):
     time.sleep(5)
     driver.quit()
     
-
 
 if __name__ == "__main__":
     main(download_csv=True)
