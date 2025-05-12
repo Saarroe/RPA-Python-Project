@@ -8,12 +8,12 @@ import os
 import time
 import requests
 
-def download_csv_file():
+def download_csv_file(chrome_options):
     """
     This function downloads the CSV file from the website.
     """
     # Open web browser and navigate to the website
-    driver = webdriver.Chrome()
+    driver = webdriver.Chrome(options=chrome_options)
     driver.get("https://rpachallenge.com/")
 
     # Find the "Download Excel" button and the link to the file
@@ -45,16 +45,22 @@ def download_csv_file():
     #print(f"File downloaded successfully to: {file_path}")
     return pd.read_excel(file_path)
 
-def main(download_csv=True):
+def main(download_csv=True, headless=True):
     """
     This script automates the process of filling out a web form using data from an Excel file.
     download_csv: bool, if True, download the CSV file from the website.
     """
+    # Set up Chrome options
+    chrome_options = Options()
+    if headless:
+        chrome_options.add_argument("--headless")
+        chrome_options.add_argument("--disable-gpu")
+    
     # If the flag is set to False, check if the file exists and load it
     if not download_csv:
         # Check if the file exists
         if not os.path.exists('challenge.xlsx'):
-            print("File not found. Please download the file from the provided link.")
+            print("File not found.")
             return
         else:
             # Load the CSV file
@@ -64,11 +70,11 @@ def main(download_csv=True):
             #print(df.shape) # Shape of the DataFrame 10,7 so 10 rows:
     else: 
         # Download the CSV file if the flag is set
-        df=download_csv_file()
+        df=download_csv_file(chrome_options)
         df.columns = df.columns.str.strip()
 
     # Open web browser and navigate to the website
-    driver = webdriver.Chrome()
+    driver = webdriver.Chrome(options=chrome_options)
     driver.get("https://rpachallenge.com/")
 
     # Find the "Start" button and click it
@@ -91,10 +97,17 @@ def main(download_csv=True):
         # Press the submit button
         submit_button = driver.find_element(By.XPATH, '//input[@value="Submit"]')
         submit_button.click()
+        
+    if headless:
+        congratulations_message = driver.find_element(By.CLASS_NAME, "message1").text
+        success_rate_message = driver.find_element(By.CLASS_NAME, "message2").text
+        # Print or check if the success message exists
+        print(congratulations_message)  
+        print(success_rate_message)  
 
-    time.sleep(5)
+    time.sleep(30)
     driver.quit()
     
 
 if __name__ == "__main__":
-    main(download_csv=True)
+    main(download_csv=True, headless=True)
