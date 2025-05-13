@@ -5,7 +5,7 @@ This repository contains a Python automation script using Selenium to solve the 
 
 All dependencies are defined in the `environment.yml` file. To set up the environment:
 
-<pre>```bash
+<pre>```
 conda env create -f environment.yml
 conda activate rpa-challenge
 ``` </pre>
@@ -13,7 +13,7 @@ conda activate rpa-challenge
 In addition, make sure you have Google Chrome installed.
 
 To run the script:
-<pre>```bash
+<pre>```
 python code/main.py
 ``` </pre>
 
