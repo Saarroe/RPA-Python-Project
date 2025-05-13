@@ -7,6 +7,18 @@ from selenium.webdriver.chrome.options import Options
 import os
 import time
 import requests
+import argparse
+
+
+def parse_args():
+    """
+    This function parses command line arguments.
+    """
+    parser = argparse.ArgumentParser(description="Automate web form filling.")
+    parser.add_argument("--download_csv", action="store_true", help="Download CSV file from the website.")
+    parser.add_argument("--headless", action="store_true", help="Run Chrome in headless mode.")
+
+    return parser.parse_args()
 
 def download_csv_file(chrome_options):
     """
@@ -48,7 +60,9 @@ def download_csv_file(chrome_options):
 def main(download_csv=True, headless=True):
     """
     This script automates the process of filling out a web form using data from an Excel file.
-    download_csv: bool, if True, download the CSV file from the website.
+    download_csv: bool, if True, download the CSV file from the website. 
+    headless: bool, if True, run Chrome in headless mode.
+    The arguments need to be passed from the command line for now.
     """
     # Set up Chrome options
     chrome_options = Options()
@@ -86,7 +100,7 @@ def main(download_csv=True, headless=True):
         #print(f"Filling row {index + 1}")
         for column, value in row.items():
             #print(f"Filling {column} with {value}")
-
+         
             # Find the input field for the current column
             input_field = driver.find_element(By.XPATH, f'//label[text()="{column}"]//following-sibling::input')
             
@@ -97,7 +111,8 @@ def main(download_csv=True, headless=True):
         # Press the submit button
         submit_button = driver.find_element(By.XPATH, '//input[@value="Submit"]')
         submit_button.click()
-        
+
+    # if headless:print the success message
     if headless:
         congratulations_message = driver.find_element(By.CLASS_NAME, "message1").text
         success_rate_message = driver.find_element(By.CLASS_NAME, "message2").text
@@ -105,9 +120,11 @@ def main(download_csv=True, headless=True):
         print(congratulations_message)  
         print(success_rate_message)  
 
-    time.sleep(30)
+    time.sleep(10)
     driver.quit()
     
 
 if __name__ == "__main__":
-    main(download_csv=True, headless=True)
+    # Run using CLI flags
+    args = parse_args()
+    main(download_csv=args.download_csv, headless=args.headless)

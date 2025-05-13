@@ -14,10 +14,10 @@ In addition, make sure you have Google Chrome installed.
 
 To run the script:
 <pre>```
-python code/main.py
+python .\code\main.py --download_csv --headless
 ``` </pre>
 
-Or run the main.py in your preferred Python IDE. 
+Or run the main.py in your preferred Python IDE with defaults. 
 
 ### Dependencies: 
 - **Python 3.11**
@@ -31,15 +31,15 @@ All dependencies are managed with Conda and listed in environment.yml.
 
 All automation logic is implemented in main.py.
 
-There are two configurable parameters:
+There are two parameters, which are implemented as CLI flags for better flexibility and usability using argparse. 
 
-- **download_csv** – whether to download the Excel file or use an existing local copy.
+- **download_csv** – Determines whether to download the Excel file or use an existing local copy.
 - **headless** – Runs Chrome in headless mode if set to True.
 
-These parameters could be improved by exposing them as CLI flags for better flexibility and usability.
-
-The code automates the form filling task with 100% accuracy. The newest release of Selenium is used to ensure there is no need to manually install the correct version of the chromedriver. This is handled automatically by Selenium (Manager), which makes the setup process smoother and more reliable. 
+The code automates the form filling task with 100% accuracy. The newest release of Selenium is used to ensure there is no need to manually install the correct version of the Chromedriver. This is handled automatically by Selenium (Manager), which makes the setup process smoother and more reliable. 
 
 It downloads the Excel file by extracting the link from the website and saving the Excel to the downloads/ folder.
 Downloading the excel file is implemented in separate function called download_csv_file(), to keep file handling logic isolated from the form automation logic.
 The requests library is used to download the file, ensuring that the file is saved properly and efficiently.  
+
+The CLI flags need to be provided to run the code in headless mode or to download the Excel from the site. 
