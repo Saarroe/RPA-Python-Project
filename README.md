@@ -17,7 +17,7 @@ To run the script:
 python code/main.py
 ``` </pre>
 
-Or run the main.py locally. 
+Or run the main.py in your preferred Python IDE. 
 
 ### Dependencies: 
 - **Python 3.11**
